@@ -10,14 +10,26 @@ import (
 
 var reader *bufio.Reader
 
+type User struct {
+	UserName       string
+	Age            int
+	FavoriteNumber float64
+	OwnsADog       bool
+}
+
 func main() {
 	reader = bufio.NewReader(os.Stdin)
-	userName := readString("What is your name?")
 
-	userAge := readInt("How old are you?")
+	var user User
 
-	// fmt.Println(fmt.Sprintf("Your name is %s. You are %d years old.", userName, userAge))
-	fmt.Printf("Your name is %s. You are %d years old.\n", userName, userAge)
+	user.UserName = readString("What is your name?")
+	user.Age = readInt("How old are you?")
+	user.FavoriteNumber = readFloat("What is your favorite number?")
+
+	fmt.Printf("Your name is %s, and you are %d years old. Your favorite number is %.2f.\n",
+		user.UserName,
+		user.Age,
+		user.FavoriteNumber)
 }
 
 func prompt() {
@@ -56,9 +68,25 @@ func readInt(question string) int {
 	}
 }
 
+func readFloat(question string) float64 {
+	for {
+		fmt.Println(question)
+		prompt()
+
+		userInput := getInput()
+
+		num, err := strconv.ParseFloat(userInput, 64)
+
+		if err != nil {
+			fmt.Println("Please enter a number")
+		} else {
+			return num
+		}
+	}
+}
+
 func getInput() string {
 	userInput, _ := reader.ReadString('\n')
-	userInput = strings.ReplaceAll(userInput, "\r\n", "")
 
-	return strings.ReplaceAll(userInput, "\n", "")
+	return strings.TrimSpace(userInput)
 }
