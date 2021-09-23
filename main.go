@@ -3,9 +3,13 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"strings"
+	"unicode"
+
+	"github.com/eiannone/keyboard"
 )
 
 var reader *bufio.Reader
@@ -25,11 +29,13 @@ func main() {
 	user.UserName = readString("What is your name?")
 	user.Age = readInt("How old are you?")
 	user.FavoriteNumber = readFloat("What is your favorite number?")
+	user.OwnsADog = readChar("Do you own a dog (y/n)?")
 
-	fmt.Printf("Your name is %s, and you are %d years old. Your favorite number is %.2f.\n",
+	fmt.Printf("Your name is %s, and you are %d years old. Your favorite number is %.2f. Owns a dog: %t\n",
 		user.UserName,
 		user.Age,
-		user.FavoriteNumber)
+		user.FavoriteNumber,
+		user.OwnsADog)
 }
 
 func prompt() {
@@ -81,6 +87,40 @@ func readFloat(question string) float64 {
 			fmt.Println("Please enter a number")
 		} else {
 			return num
+		}
+	}
+}
+
+func readChar(question string) bool {
+	fmt.Println(question)
+	err := keyboard.Open()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer func() {
+		_ = keyboard.Close()
+	}()
+
+	for {
+		char, _, err := keyboard.GetSingleKey()
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if unicode.IsLetter(char) {
+			char = unicode.ToLower(char)
+
+			if char == 'y' {
+				return true
+			} else if char == 'n' {
+				return false
+			} else {
+				fmt.Println("Please enter 'y' or 'n'.")
+			}
+		} else {
+			fmt.Println("Please enter an alphabetic character.")
 		}
 	}
 }
