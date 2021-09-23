@@ -31,7 +31,7 @@ func main() {
 	user.FavoriteNumber = readFloat("What is your favorite number?")
 	user.OwnsADog = readChar("Do you own a dog (y/n)?")
 
-	fmt.Printf("Your name is %s, and you are %d years old. Your favorite number is %.2f. Owns a dog: %t\n",
+	fmt.Printf("\nYour name is %s, and you are %d years old. Your favorite number is %.2f. Owns a dog: %t\n",
 		user.UserName,
 		user.Age,
 		user.FavoriteNumber,
@@ -93,6 +93,8 @@ func readFloat(question string) float64 {
 
 func readChar(question string) bool {
 	fmt.Println(question)
+	prompt()
+
 	err := keyboard.Open()
 	if err != nil {
 		log.Fatal(err)
