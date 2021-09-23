@@ -92,9 +92,6 @@ func readFloat(question string) float64 {
 }
 
 func readChar(question string) bool {
-	fmt.Println(question)
-	prompt()
-
 	err := keyboard.Open()
 	if err != nil {
 		log.Fatal(err)
@@ -105,6 +102,8 @@ func readChar(question string) bool {
 	}()
 
 	for {
+		fmt.Println(question)
+		prompt()
 		char, _, err := keyboard.GetSingleKey()
 
 		if err != nil {
